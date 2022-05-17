@@ -1,7 +1,5 @@
 FROM php:8.1-cli as dev
 
-# TODO: nginx unit
-
 ENV COMPOSER_MEMORY_LIMIT=-1
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
@@ -12,7 +10,7 @@ COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr
 RUN mkdir /.composer \
     && chown 1000:1000 /.composer
 
-RUN apt-get update && apt-get install -y \
+RUN apt update && apt install -y \
     git \
     zip
 
@@ -44,7 +42,5 @@ COPY .docker/docker-entrypoint.sh /docker-entrypoint.sh
 RUN chmod +x /docker-entrypoint.sh
 
 RUN mkdir /docker-entrypoint.d/
-COPY .docker/entrypoints/*.sh /docker-entrypoint.d/
-RUN chmod +x /docker-entrypoint.d/*.sh
 
 USER 1000:1000
