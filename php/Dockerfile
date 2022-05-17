@@ -1,5 +1,7 @@
 FROM php:8.1-cli as dev
 
+# TODO: nginx unit
+
 ENV COMPOSER_MEMORY_LIMIT=-1
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer

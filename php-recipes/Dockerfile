@@ -55,7 +55,6 @@ RUN install-php-extensions \
     opcache \
     pcntl \
     pcov \
-    pdo_firebird \
     pdo_mysql \
     pdo_pgsql \
     pdo_sqlsrv \
