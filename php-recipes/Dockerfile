@@ -28,7 +28,6 @@ RUN install-php-extensions \
     ast \
     bcmath \
     blackfire \
-    bz2 \
     calendar \
     csv \
     decimal \
@@ -36,9 +35,7 @@ RUN install-php-extensions \
     exif \
     gd \
     gettext \
-    gnupg \
     http \
-    igbinary \
     imagick \
     imap \
     intl \
@@ -51,22 +48,16 @@ RUN install-php-extensions \
     mongodb \ \
     mysqli \
     oauth \
-    odbc \
     opcache \
     pcntl \
     pcov \
     pdo_mysql \
     pdo_pgsql \
-    pdo_sqlsrv \
-    pgsql \
-    rdkafka \
     redis \
     soap \
     sockets \
     uuid \
     xdebug \
-    xlswriter \
-    xmldiff \
     xmlrpc \
     xsl \
     yaml \
