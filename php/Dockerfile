@@ -41,6 +41,7 @@ RUN chmod +x /usr/local/bin/wait-for-it
 COPY .docker/docker-entrypoint.sh /docker-entrypoint.sh
 RUN chmod +x /docker-entrypoint.sh
 
-RUN mkdir /docker-entrypoint.d/
+RUN mkdir /docker-entrypoint.d/ && chown 777 /docker-entrypoint.d
 
 USER 1000:1000
+
