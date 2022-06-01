@@ -6,6 +6,10 @@ Purpose of this repository is to speed up builds of other images. This approach 
 
 ## PHP
 
+```
+ghcr.io/peon-dev/php:main
+```
+
 Contains:
 - Composer 2
 - Xdebug
@@ -16,6 +20,12 @@ To unload xdebug:
 `/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini`
 
 ## PHP Recipes
+
+Base image for recipes is tagged with the `recipes-` prefix.
+
+```
+ghcr.io/peon-dev/php:recipes-main
+```
 
 Contains:
 - Composer 2
