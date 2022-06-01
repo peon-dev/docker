@@ -10,6 +10,7 @@ on:
             - 'v*.*.*'
         paths:
             - 'php/**'
+            - '.github/workflows/php.yml'
 
 jobs:
     docker:
