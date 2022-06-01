@@ -24,8 +24,10 @@ jobs:
                 with:
                     # list of Docker images to use as base name for tags
                     images: |
-                        ghcr.io/peon-dev/php-recipes
+                        ghcr.io/peon-dev/php
                     # generate Docker tags based on the following events/attributes
+                    flavor: |
+                        prefix=recipes-,onlatest=true
                     tags: |
                         type=ref,event=branch
                         type=ref,event=pr
