@@ -17,6 +17,7 @@ RUN apt update && apt install -y \
 RUN install-php-extensions \
     intl \
     zip \
+    uuid \
     pdo_pgsql \
     xdebug
 
