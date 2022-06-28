@@ -7,8 +7,10 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 # Very convenient PHP extensions installer: https://github.com/mlocati/docker-php-extension-installer
 COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/local/bin/
 
+RUN useradd -u 1000 peon
+
 RUN mkdir /.composer \
-    && chown 1000:1000 /.composer
+    && chown peon /.composer
 
 RUN apt update && apt install -y \
     git \
@@ -21,7 +23,7 @@ RUN install-php-extensions \
     pdo_pgsql \
     xdebug
 
-# Install docker, required for running demo
+# Install docker, required for running commands
 RUN apt-get update && apt-get install -y \
       ca-certificates \
       curl \
@@ -34,6 +36,8 @@ RUN apt-get update && apt-get install -y \
   && apt-get update && apt-get -y install \
       docker-ce-cli
 
+RUN usermod -aG docker peon
+
 COPY .docker/php/xdebug.ini /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 
 COPY .docker/wait-for-it.sh /usr/local/bin/wait-for-it
@@ -44,5 +48,4 @@ RUN chmod +x /docker-entrypoint.sh
 
 RUN mkdir /docker-entrypoint.d/ && chmod 777 /docker-entrypoint.d
 
-USER 1000:1000
-
+USER peon
