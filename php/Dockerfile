@@ -7,7 +7,9 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 # Very convenient PHP extensions installer: https://github.com/mlocati/docker-php-extension-installer
 COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/local/bin/
 
-RUN useradd -u 1000 peon && groupadd docker
+RUN groupadd -g 998 docker \
+    && useradd -u 1000 peon \
+    && usermod -aG docker peon
 
 RUN mkdir /.composer \
     && chown peon /.composer
@@ -36,7 +38,6 @@ RUN apt-get update && apt-get install -y \
   && apt-get update && apt-get -y install \
       docker-ce-cli
 
-RUN usermod -aG docker peon
 
 COPY .docker/php/xdebug.ini /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 
