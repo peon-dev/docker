@@ -82,6 +82,7 @@ RUN chmod +x /usr/local/bin/wait-for-it \
         uuid \
         pdo_pgsql \
         opcache \
+        apcu \
         xdebug \
     && curl -fsSL https://download.docker.com/linux/$(. /etc/os-release; echo "$ID")/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg \
     && echo \
