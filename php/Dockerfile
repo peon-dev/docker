@@ -7,7 +7,7 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 # Very convenient PHP extensions installer: https://github.com/mlocati/docker-php-extension-installer
 COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/local/bin/
 
-RUN useradd -u 1000 peon
+RUN useradd -u 1000 peon && groupadd docker
 
 RUN mkdir /.composer \
     && chown peon /.composer
