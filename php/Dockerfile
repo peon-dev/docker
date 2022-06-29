@@ -108,4 +108,3 @@ STOPSIGNAL SIGTERM
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
 
 CMD ["unitd", "--no-daemon"]
-
