@@ -12,7 +12,7 @@ RUN set -ex \
     && CC_OPT="$(DEB_BUILD_MAINT_OPTIONS="hardening=+all,-pie" DEB_CFLAGS_MAINT_APPEND="-Wp,-D_FORTIFY_SOURCE=2 -fPIC" dpkg-buildflags --get CFLAGS)" \
     && LD_OPT="$(DEB_BUILD_MAINT_OPTIONS="hardening=+all,-pie" DEB_LDFLAGS_MAINT_APPEND="-Wl,--as-needed -pie" dpkg-buildflags --get LDFLAGS)" \
     && CONFIGURE_ARGS="--prefix=/usr \
-                --state=/var/lib/unit \
+                --state=/var/lib/unit/state \
                 --control=unix:/var/lib/unit/unit.sock \
                 --pid=/var/lib/unit/unit.pid \
                 --log=/var/lib/unit/unit.log \
@@ -89,7 +89,7 @@ RUN chmod +x /usr/local/bin/wait-for-it \
     && echo \
        "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/$(. /etc/os-release; echo "$ID") \
        $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null \
-    && mkdir -p /var/lib/unit \
+    && mkdir -p /var/lib/unit/state \
     && chown peon -R /var/lib/unit \
     && chown peon -R /usr/tmp \
     && chown peon -R /usr/local/etc/php/conf.d  \
