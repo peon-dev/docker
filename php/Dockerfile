@@ -17,9 +17,7 @@ RUN set -ex \
                 --pid=/var/lib/unit/unit.pid \
                 --log=/var/lib/unit/unit.log \
                 --user=peon \
-                --group=peon \
-                --openssl \
-                --libdir=/usr/lib/$DEB_HOST_MULTIARCH" \
+                --group=peon" \
     && ./configure $CONFIGURE_ARGS --cc-opt="$CC_OPT" --ld-opt="$LD_OPT" --modules=/usr/lib/unit/debug-modules --debug \
     && make -j $NCPU unitd \
     && install -pm755 build/unitd /usr/sbin/unitd-debug \
