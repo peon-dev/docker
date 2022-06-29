@@ -13,10 +13,9 @@ RUN set -ex \
     && LD_OPT="$(DEB_BUILD_MAINT_OPTIONS="hardening=+all,-pie" DEB_LDFLAGS_MAINT_APPEND="-Wl,--as-needed -pie" dpkg-buildflags --get LDFLAGS)" \
     && CONFIGURE_ARGS="--prefix=/usr \
                 --state=/var/lib/unit \
-                --control=unix:/var/run/control.unit.sock \
-                --pid=/var/run/unit.pid \
-                --log=/var/log/unit.log \
-                --tmp=/var/tmp \
+                --control=unix:/var/lib/unit/unit.sock \
+                --pid=/var/lib/unit/unit.pid \
+                --log=/var/lib/unit/unit.log \
                 --user=peon \
                 --group=peon \
                 --openssl \
@@ -42,6 +41,7 @@ RUN set -ex \
 FROM php:8.1-cli
 
 ENV COMPOSER_MEMORY_LIMIT=-1 \
+    COMPOSER_HOME="/.composer" \
     PHP_OPCACHE_VALIDATE_TIMESTAMPS=1 \
     PHP_OPCACHE_MAX_ACCELERATED_FILES=15000 \
     PHP_OPCACHE_MEMORY_CONSUMPTION=192 \
@@ -69,6 +69,7 @@ RUN chmod +x /usr/local/bin/wait-for-it \
     && usermod -aG docker peon \
     && mkdir /.composer \
     && chown peon /.composer \
+    && mkdir /usr/tmp \
     && apt-get update && apt-get install -y \
         git \
         zip \
@@ -88,21 +89,23 @@ RUN chmod +x /usr/local/bin/wait-for-it \
     && echo \
        "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/$(. /etc/os-release; echo "$ID") \
        $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null \
-    && if [ -f "/tmp/libunit.a" ]; then \
-        mv /tmp/libunit.a /usr/lib/$(dpkg-architecture -q DEB_HOST_MULTIARCH)/libunit.a; \
-        rm -f /tmp/libunit.a; \
-    fi \
-    && mkdir -p /var/lib/unit/ \
+    && mkdir -p /var/lib/unit \
+    && chown peon -R /var/lib/unit \
+    && chown peon -R /usr/tmp \
+    && chown peon -R /usr/local/etc/php/conf.d  \
     && apt-get update && apt-get -y install \
       docker-ce-cli \
     && apt-get --no-install-recommends --no-install-suggests -y install curl $(cat /requirements.apt) \
     && apt-get clean && rm -rf /var/lib/apt/lists/* \
     && rm -f /requirements.apt \
-    && ln -sf /dev/stdout /var/log/unit.log \
-    && ln -sf /dev/stdout /var/log/access.log
+    && ln -sf /dev/stdout /var/lib/unit/unit.log \
+    && ln -sf /dev/stdout /var/lib/unit/access.log
+
+USER peon
 
 STOPSIGNAL SIGTERM
 
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
 
 CMD ["unitd", "--no-daemon"]
+
