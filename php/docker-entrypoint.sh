@@ -18,7 +18,7 @@ curl_put()
     return 0
 }
 
-if [ "$1" = "unitd" -o "$1" = "unitd-debug" ]; then
+if [ "$1" = "unitd" ]; then
     if /usr/bin/find "/docker-entrypoint.d/" -mindepth 1 -print -quit 2>/dev/null | /bin/grep -q .; then
         echo "$0: /docker-entrypoint.d/ is not empty, launching Unit daemon to perform initial configuration..."
         /usr/sbin/$1 --control unix:/var/lib/unit/unit.sock

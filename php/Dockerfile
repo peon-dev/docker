@@ -52,7 +52,6 @@ COPY wait-for-it.sh /usr/local/bin/wait-for-it
 COPY php.ini /usr/local/etc/php/conf.d/99-php-overrides.ini
 
 COPY --from=UNIT_BUILDER /usr/sbin/unitd /usr/sbin/unitd
-COPY --from=UNIT_BUILDER /usr/sbin/unitd-debug /usr/sbin/unitd-debug
 COPY --from=UNIT_BUILDER /usr/lib/unit/ /usr/lib/unit/
 COPY --from=UNIT_BUILDER /requirements.apt /requirements.apt
 
@@ -65,7 +64,7 @@ RUN chmod +x /usr/local/bin/wait-for-it \
     && chmod +x /usr/local/bin/docker-entrypoint.sh \
     && mkdir /docker-entrypoint.d/ \
     && groupadd --gid 1000 peon \
-    && useradd --uid --gid -H -D peon 1000 peon \
+    && useradd --uid 1000 --gid 1000 --no-create-home peon \
     && mkdir /.composer \
     && chown peon:peon /.composer \
     && mkdir /usr/tmp \
