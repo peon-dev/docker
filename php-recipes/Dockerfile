@@ -1,4 +1,4 @@
-FROM php:8.2-cli as dev
+FROM php:8.2-cli
 
 ENV COMPOSER_MEMORY_LIMIT=-1
 
@@ -13,14 +13,16 @@ RUN mkdir /.composer \
 RUN apt-get update && apt-get install -y \
     git \
     zip \
-    # gearman dependencies:
-    libgearman-dev \
     libevent-dev \
-    uuid
+    uuid \
+    ca-certificates \
+    curl \
+    gnupg \
+    lsb-release
 
 # Not available via docker-php-extension-installer yet
 # see https://github.com/mlocati/docker-php-extension-installer/issues/495
-RUN pecl install gearman
+# RUN pecl install gearman
 
 RUN install-php-extensions \
     amqp \

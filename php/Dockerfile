@@ -6,7 +6,7 @@ RUN set -ex \
     && mkdir -p /usr/lib/unit/modules /usr/lib/unit/debug-modules \
     && hg clone https://hg.nginx.org/unit \
     && cd unit \
-    && hg up 1.27.0 \
+    && hg up 1.30.0 \
     && NCPU="$(getconf _NPROCESSORS_ONLN)" \
     && DEB_HOST_MULTIARCH="$(dpkg-architecture -q DEB_HOST_MULTIARCH)" \
     && CC_OPT="$(DEB_BUILD_MAINT_OPTIONS="hardening=+all,-pie" DEB_CFLAGS_MAINT_APPEND="-Wp,-D_FORTIFY_SOURCE=2 -fPIC" dpkg-buildflags --get CFLAGS)" \
@@ -38,7 +38,7 @@ RUN set -ex \
     && ldd /usr/sbin/unitd | awk '/=>/{print $(NF-1)}' | while read n; do dpkg-query -S $n; done | sed 's/^\([^:]\+\):.*$/\1/' | sort | uniq > /requirements.apt
 
 
-FROM php:8.1-cli
+FROM php:8.2-cli
 
 ENV COMPOSER_MEMORY_LIMIT=-1 \
     COMPOSER_HOME="/.composer" \
