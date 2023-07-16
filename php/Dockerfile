@@ -52,7 +52,6 @@ COPY wait-for-it.sh /usr/local/bin/wait-for-it
 COPY php.ini /usr/local/etc/php/conf.d/99-php-overrides.ini
 
 COPY --from=UNIT_BUILDER /usr/sbin/unitd /usr/sbin/unitd
-COPY --from=UNIT_BUILDER /usr/sbin/unitd-debug /usr/sbin/unitd-debug
 COPY --from=UNIT_BUILDER /usr/lib/unit/ /usr/lib/unit/
 COPY --from=UNIT_BUILDER /requirements.apt /requirements.apt
 
@@ -64,19 +63,19 @@ COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr
 RUN chmod +x /usr/local/bin/wait-for-it \
     && chmod +x /usr/local/bin/docker-entrypoint.sh \
     && mkdir /docker-entrypoint.d/ \
-    && groupadd -g 998 docker \
-    && useradd -u 1000 peon \
-    && usermod -aG docker peon \
+    && groupadd --gid 1000 peon \
+    && useradd --uid 1000 --gid 1000 --no-create-home peon \
     && mkdir /.composer \
-    && chown peon /.composer \
+    && chown peon:peon /.composer \
     && mkdir /usr/tmp \
-    && apt-get update && apt-get install -y \
+    && apt-get update && apt-get install --no-install-recommends --no-install-suggests -y \
         git \
         zip \
         ca-certificates \
         curl \
         gnupg \
         lsb-release \
+        $(cat /requirements.apt) \
     && install-php-extensions \
         intl \
         zip \
@@ -85,19 +84,12 @@ RUN chmod +x /usr/local/bin/wait-for-it \
         opcache \
         apcu \
         xdebug \
-    && curl -fsSL https://download.docker.com/linux/$(. /etc/os-release; echo "$ID")/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg \
-    && echo \
-       "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/$(. /etc/os-release; echo "$ID") \
-       $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null \
-    && mkdir -p /var/lib/unit/state \
-    && chown peon -R /var/lib/unit \
-    && chown peon -R /usr/tmp \
-    && chown peon -R /usr/local/etc/php/conf.d  \
-    && apt-get update && apt-get -y install \
-      docker-ce-cli \
-    && apt-get --no-install-recommends --no-install-suggests -y install curl $(cat /requirements.apt) \
     && apt-get clean && rm -rf /var/lib/apt/lists/* \
     && rm -f /requirements.apt \
+    && mkdir -p /var/lib/unit/state \
+    && chown peon:peon -R /var/lib/unit \
+    && chown peon:peon -R /usr/tmp \
+    && chown peon:peon -R /usr/local/etc/php/conf.d  \
     && ln -sf /dev/stdout /var/lib/unit/unit.log \
     && ln -sf /dev/stdout /var/lib/unit/access.log
 
