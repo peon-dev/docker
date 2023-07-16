@@ -1,4 +1,4 @@
-FROM php:8.1-cli as UNIT_BUILDER
+FROM php:8.2-cli as UNIT_BUILDER
 
 RUN set -ex \
     && apt-get update \
